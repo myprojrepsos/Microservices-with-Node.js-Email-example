@@ -7,7 +7,7 @@ resources:
 variables:
   # Container registry service connection established during pipeline creation
   dockerRegistryServiceConnection: 'f633da39-b402-4c04-9d26-575faa61735f'
-  imageRepository: 'app1/app1nginx'
+  imageRepository: 'myprojrepsos.Microservices-with-Node.js-Email-example'
   containerRegistry: 'nodeaap.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
   tag: '$(Build.BuildId)'
