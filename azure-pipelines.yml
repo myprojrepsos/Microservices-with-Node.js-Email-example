@@ -4,31 +4,31 @@ trigger:
 variables:
   # Container registry service connection established during pipeline creation
   dockerRegistryServiceConnection: 'f633da39-b402-4c04-9d26-575faa61735f'
-  imageRepository: 'Nodejs'
-  containerRegistry: 'nodeapp2.azurecr.io'
-  dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
+  # imageRepository: 'Nodejs'
+  # containerRegistry: 'nodeapp2.azurecr.io'
+  # dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
   tag: '$(Build.BuildId)'
   
   vmImageName: 'ubuntu-latest'
 
-  stages:
-   - stage: build 
-     dispalyName: build and push
-     jobs:  
+stages:
+  - stage: build 
+    dispalyName: build and push
+    jobs:  
        - job: Build
          displayName: Build
 
          pool:
            vmImage: $(vmImageName)
-     steps:
+    steps:
      - task: Docker@2
        displayName: Build and push an image to container registry
        inputs:
          command: buildAndPush
-         repository: $(imageRepository)
-         dockerfile: $(dockerfilePath)
-         containerRegistry: $(dockerRegistryServiceConnection)
+         repository: 'Nodejs'
+         dockerfile: $(Build.SourcesDirectory)/Dockerfile'
+         containerRegistry: nodeapp2.azurecr.io
          tags: |
-          $(tag)
-       
+          $(tag)  
+
 
