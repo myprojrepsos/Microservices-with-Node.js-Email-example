@@ -1,33 +1,42 @@
-trigger:
-- master
 
 variables:
-  # Container registry service connection established during pipeline creation
-  dockerRegistryServiceConnection: 'f633da39-b402-4c04-9d26-575faa61735f'
-  # imageRepository: 'Nodejs'
-  # containerRegistry: 'nodeapp2.azurecr.io'
-  # dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
-  tag: '$(Build.BuildId)'
-  
-  vmImageName: 'ubuntu-latest'
+  acrName: <your-acr-name>
+  acrResourceGroup: <your-acr-resource-group>
+  acrLoginServer: <your-acr-login-server>
+  acrUsername: <your-acr-username>
+  acrPassword: <your-acr-password>
+  # aksClusterName: <your-aks-cluster-name>
+  aksResourceGroup: <your-aks-resource-group>
+  pool:
+  vmImage: 'ubuntu-latest'
 
-stages:
-  - stage: build 
-    
-    jobs:  
-    - job: Build
-      displayName: Build
-      pool:
-        vmImage: $(vmImageName)
-      steps:
-      - task: Docker@2
-        displayName: Build and push an image to container registry
-        inputs:
-         command: buildAndPush
-         repository: 'Nodejs'
-         dockerfile: $(Build.SourcesDirectory)/Dockerfile'
-         containerRegistry: nodeapp2.azurecr.io
-         tags: |
-          $(tag)  
-
-
+steps:
+- task: Docker@2
+  displayName: Build and push image
+  inputs:
+    containerRegistry: $(acrLoginServer)
+    repository: $(acrName)
+    command: buildAndPush
+    Dockerfile: $(Build.SourcesDirectory)/Dockerfile
+    tags: |
+      $(Build.BuildId)
+      latest
+  env:
+    DOCKER_REGISTRY: $(acrLoginServer)
+    DOCKER_USERNAME: $(acrUsername)
+    DOCKER_PASSWORD: $(acrPassword)
+# - task: Kubernetes@1
+#   displayName: Deploy to AKS
+#   inputs:
+#     connectionType: 'Azure Resource Manager'
+#     azureSubscriptionEndpoint: '<your-azure-subscription>'
+#     azureResourceGroup: $(aksResourceGroup)
+#     kubernetesCluster: $(aksClusterName)
+#     command: apply
+#     arguments: '-f $(Build.SourcesDirectory)/kubernetes.yaml'
+#     secretType: 'dockerRegistry'
+#     containerRegistryType: 'Azure Container Registry'
+#     containerRegistry: $(acrName)
+#     dockerRegistryEndpoint: $(acrLoginServer)
+#     dockerRegistryUser: $(acrUsername)
+#     dockerRegistryPassword: $(acrPassword)
