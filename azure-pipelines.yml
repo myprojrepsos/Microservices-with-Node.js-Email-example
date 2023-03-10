@@ -1,14 +1,11 @@
 trigger:
 - master
 
-resources:
-- repo: self
-
 variables:
   # Container registry service connection established during pipeline creation
   dockerRegistryServiceConnection: 'f633da39-b402-4c04-9d26-575faa61735f'
-  imageRepository: 'myprojrepsos.Microservices-with-Node.js-Email-example'
-  containerRegistry: 'nodeaap.azurecr.io'
+  imageRepository: 'Nodejs'
+  containerRegistry: 'nodeapp2.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
   tag: '$(Build.BuildId)'
   
