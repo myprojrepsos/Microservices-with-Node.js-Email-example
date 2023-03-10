@@ -1,0 +1,37 @@
+trigger:
+- master
+
+resources:
+- repo: self
+
+variables:
+  # Container registry service connection established during pipeline creation
+  dockerRegistryServiceConnection: 'f633da39-b402-4c04-9d26-575faa61735f'
+  imageRepository: 'app1/app1nginx'
+  containerRegistry: 'nodeaap.azurecr.io'
+  dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
+  tag: '$(Build.BuildId)'
+  
+  vmImageName: 'ubuntu-latest'
+
+  stages:
+   - stage: build 
+     dispalyName: build and push
+     jobs:  
+       - job: Build
+         displayName: Build
+
+         pool:
+           vmImage: $(vmImageName)
+     steps:
+     - task: Docker@2
+       displayName: Build and push an image to container registry
+       inputs:
+         command: buildAndPush
+         repository: $(imageRepository)
+         dockerfile: $(dockerfilePath)
+         containerRegistry: $(dockerRegistryServiceConnection)
+         tags: |
+          $(tag)
+       
+
